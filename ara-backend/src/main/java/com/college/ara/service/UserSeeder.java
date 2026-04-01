@@ -48,36 +48,39 @@ public class UserSeeder implements ApplicationListener<ContextRefreshedEvent> {
         if (initialized.getAndSet(true)) {
             return;
         }
+        try {
+            upsertUser("admin", "admin123", "Administrator", UserRole.ADMIN, "Administration", "Approvals, Resources, Scheduling");
+            User faculty = upsertUser("faculty", "faculty123", "Dr Suhma Rani", UserRole.FACULTY, "CSE", "MO, Timetable Review");
+            upsertUser("sree.lakshmi", "sree.lakshmi", "Sree Lakshmi", UserRole.FACULTY, "CSE", "FSAD / PFSD");
+            upsertUser("anuradha", "anuradha", "Dr Anuradha", UserRole.FACULTY, "CSE", "FSAD / PFSD");
 
-        upsertUser("admin", "admin123", "Administrator", UserRole.ADMIN, "Administration", "Approvals, Resources, Scheduling");
-        User faculty = upsertUser("faculty", "faculty123", "Dr Suhma Rani", UserRole.FACULTY, "CSE", "MO, Timetable Review");
-        upsertUser("sree.lakshmi", "sree.lakshmi", "Sree Lakshmi", UserRole.FACULTY, "CSE", "FSAD / PFSD");
-        upsertUser("anuradha", "anuradha", "Dr Anuradha", UserRole.FACULTY, "CSE", "FSAD / PFSD");
+            syncManagedResources();
+            Resource classroom = resourceRepository.findByResourceCode("H1-17")
+                    .orElseGet(() -> upsertResource("H1-17", "H1-17 Classroom", ResourceType.CLASSROOM, 60, "H1 Block"));
+            migrateLegacyBookings(classroom);
 
-        syncManagedResources();
-        Resource classroom = resourceRepository.findByResourceCode("H1-17")
-                .orElseGet(() -> upsertResource("H1-17", "H1-17 Classroom", ResourceType.CLASSROOM, 60, "H1 Block"));
-        migrateLegacyBookings(classroom);
+            if (bookingRepository.count() == 0) {
+                Booking pending = new Booking();
+                pending.setUser(faculty);
+                pending.setResource(classroom);
+                pending.setPurpose("Data Structures lab session");
+                pending.setStartTime(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0).withSecond(0).withNano(0));
+                pending.setEndTime(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0).withSecond(0).withNano(0));
+                pending.setStatus(BookingStatus.PENDING);
+                bookingRepository.save(pending);
 
-        if (bookingRepository.count() == 0) {
-            Booking pending = new Booking();
-            pending.setUser(faculty);
-            pending.setResource(classroom);
-            pending.setPurpose("Data Structures lab session");
-            pending.setStartTime(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0).withSecond(0).withNano(0));
-            pending.setEndTime(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0).withSecond(0).withNano(0));
-            pending.setStatus(BookingStatus.PENDING);
-            bookingRepository.save(pending);
-
-            Booking approved = new Booking();
-            approved.setUser(faculty);
-            approved.setResource(classroom);
-            approved.setPurpose("Faculty meeting");
-            approved.setStartTime(LocalDateTime.now().plusDays(2).withHour(14).withMinute(0).withSecond(0).withNano(0));
-            approved.setEndTime(LocalDateTime.now().plusDays(2).withHour(15).withMinute(30).withSecond(0).withNano(0));
-            approved.setStatus(BookingStatus.APPROVED);
-            approved.setApprovedAt(LocalDateTime.now());
-            bookingRepository.save(approved);
+                Booking approved = new Booking();
+                approved.setUser(faculty);
+                approved.setResource(classroom);
+                approved.setPurpose("Faculty meeting");
+                approved.setStartTime(LocalDateTime.now().plusDays(2).withHour(14).withMinute(0).withSecond(0).withNano(0));
+                approved.setEndTime(LocalDateTime.now().plusDays(2).withHour(15).withMinute(30).withSecond(0).withNano(0));
+                approved.setStatus(BookingStatus.APPROVED);
+                approved.setApprovedAt(LocalDateTime.now());
+                bookingRepository.save(approved);
+            }
+        } catch (Exception ex) {
+            System.err.println("[ARA] Skipping startup seed due to DB initialization timing issue: " + ex.getMessage());
         }
     }
 
