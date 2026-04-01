@@ -1,11 +1,13 @@
 # Academic Resource Allocation System (ARA)
 
+ML-Assisted Classroom Allocation System is a web-based application that automatically assigns classrooms and labs using timetable data. It prevents room conflicts through rule-based logic and supports utilization analysis to improve efficient use of academic resources.
+
 Monorepo structure:
 
-- `backend/` Spring Boot API (Java 17, PostgreSQL)
-- `frontend/` React client (Vite)
+- `ara-backend/` Spring MVC + JPA API (Java 17, Jetty)
+- `ara-frontend/` React client
 
-This repository is scaffolded against the engineering roadmap phases and enforces:
+Core architecture expectations:
 
 - Layered architecture (`controller -> service -> repository -> database`)
 - No business logic in controllers
