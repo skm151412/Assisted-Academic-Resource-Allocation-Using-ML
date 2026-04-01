@@ -32,16 +32,27 @@ public class AppConfig {
 
     @Bean
     public DataSource dataSource(Environment environment) {
-        String rawUrl = environment.getProperty("db.url", "").trim();
+        String rawUrl = firstNonBlank(
+            environment.getProperty("db.url", ""),
+            environment.getProperty("DB_URL", ""));
         String dbUrl = normalizeJdbcUrl(rawUrl);
-        String dbUser = environment.getProperty("db.username", "");
-        String dbPassword = environment.getProperty("db.password", "");
+        String dbUser = firstNonBlank(
+            environment.getProperty("db.username", ""),
+            environment.getProperty("DB_USERNAME", ""));
+        String dbPassword = firstNonBlank(
+            environment.getProperty("db.password", ""),
+            environment.getProperty("DB_PASSWORD", ""));
 
         if (dbUrl.isBlank()) {
             return h2FallbackDataSource();
         }
 
-        String driver = environment.getProperty("db.driverClassName", dbUrl.startsWith("jdbc:mysql:") ? "com.mysql.cj.jdbc.Driver" : "org.h2.Driver");
+        String driver = firstNonBlank(
+            environment.getProperty("db.driverClassName", ""),
+            environment.getProperty("DB_DRIVER", ""));
+        if (driver.isBlank()) {
+            driver = dbUrl.startsWith("jdbc:mysql:") ? "com.mysql.cj.jdbc.Driver" : "org.h2.Driver";
+        }
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driver);
@@ -94,9 +105,12 @@ public class AppConfig {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl", "update"));
         String fallback = System.getProperty(FALLBACK_FLAG, "false");
+        String configuredDialect = firstNonBlank(
+            environment.getProperty("hibernate.dialect", ""),
+            environment.getProperty("HIBERNATE_DIALECT", ""));
         String dialect = "true".equalsIgnoreCase(fallback)
                 ? "org.hibernate.dialect.H2Dialect"
-                : environment.getProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+            : (configuredDialect.isBlank() ? "org.hibernate.dialect.H2Dialect" : configuredDialect);
         properties.setProperty("hibernate.dialect", dialect);
         properties.setProperty("hibernate.show_sql", environment.getProperty("hibernate.show_sql", "false"));
         properties.setProperty("hibernate.jdbc.time_zone", "UTC");
@@ -118,9 +132,19 @@ public class AppConfig {
             return "";
         }
         String normalized = url.trim();
+        if (normalized.startsWith("jdbc:mysql:") || normalized.startsWith("mysql://")) {
+            normalized = normalized.replaceAll("\\s+", "");
+        }
         if (normalized.startsWith("mysql://")) {
             return "jdbc:" + normalized;
         }
         return normalized;
+    }
+
+    private String firstNonBlank(String primary, String fallback) {
+        if (primary != null && !primary.trim().isBlank()) {
+            return primary.trim();
+        }
+        return fallback == null ? "" : fallback.trim();
     }
 }
