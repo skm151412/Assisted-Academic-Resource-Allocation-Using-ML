@@ -12,8 +12,16 @@ public class SchemaMigrationService {
 
     public SchemaMigrationService(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        migrateAllocationTable();
-        migrateUserTable();
+        try {
+            migrateAllocationTable();
+        } catch (Exception ex) {
+            System.err.println("[ARA] Skipping allocation schema migration: " + ex.getMessage());
+        }
+        try {
+            migrateUserTable();
+        } catch (Exception ex) {
+            System.err.println("[ARA] Skipping user schema migration: " + ex.getMessage());
+        }
     }
 
     private void migrateAllocationTable() {
