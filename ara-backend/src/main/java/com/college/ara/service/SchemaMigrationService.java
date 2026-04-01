@@ -49,7 +49,7 @@ public class SchemaMigrationService {
 
     private boolean tableExists(String tableName) {
         Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE UPPER(TABLE_NAME) = ?",
+                "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE UPPER(TABLE_NAME) = ? AND TABLE_SCHEMA = DATABASE()",
                 Integer.class,
                 tableName);
         return count != null && count > 0;
@@ -57,7 +57,7 @@ public class SchemaMigrationService {
 
     private boolean columnExists(String tableName, String columnName) {
         Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE UPPER(TABLE_NAME) = ? AND UPPER(COLUMN_NAME) = ?",
+                "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE UPPER(TABLE_NAME) = ? AND UPPER(COLUMN_NAME) = ? AND TABLE_SCHEMA = DATABASE()",
                 Integer.class,
                 tableName,
                 columnName);
