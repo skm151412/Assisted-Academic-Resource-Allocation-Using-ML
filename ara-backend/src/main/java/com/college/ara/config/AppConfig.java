@@ -1,6 +1,8 @@
 package com.college.ara.config;
 
 import java.util.Properties;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 import javax.sql.DataSource;
 
@@ -26,13 +28,38 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:db.properties")
 public class AppConfig {
 
+    private static final String FALLBACK_FLAG = "ara.datasource.fallback";
+
     @Bean
     public DataSource dataSource(Environment environment) {
+        String rawUrl = environment.getProperty("db.url", "").trim();
+        String dbUrl = normalizeJdbcUrl(rawUrl);
+        String dbUser = environment.getProperty("db.username", "");
+        String dbPassword = environment.getProperty("db.password", "");
+
+        if (dbUrl.isBlank()) {
+            return h2FallbackDataSource();
+        }
+
+        String driver = environment.getProperty("db.driverClassName", dbUrl.startsWith("jdbc:mysql:") ? "com.mysql.cj.jdbc.Driver" : "org.h2.Driver");
+
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getProperty("db.driverClassName", "org.h2.Driver"));
-        dataSource.setUrl(environment.getProperty("db.url"));
-        dataSource.setUsername(environment.getProperty("db.username"));
-        dataSource.setPassword(environment.getProperty("db.password"));
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(dbUrl);
+        dataSource.setUsername(dbUser);
+        dataSource.setPassword(dbPassword);
+
+        if (dbUrl.startsWith("jdbc:mysql:")) {
+            try (Connection ignored = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+                System.clearProperty(FALLBACK_FLAG);
+                return dataSource;
+            } catch (Exception ex) {
+                System.err.println("[ARA] MySQL connection failed at startup. Falling back to embedded H2. Cause: " + ex.getMessage());
+                return h2FallbackDataSource();
+            }
+        }
+
+        System.clearProperty(FALLBACK_FLAG);
         return dataSource;
     }
 
@@ -66,9 +93,34 @@ public class AppConfig {
     private Properties jpaProperties(Environment environment) {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl", "update"));
-        properties.setProperty("hibernate.dialect", environment.getProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect"));
+        String fallback = System.getProperty(FALLBACK_FLAG, "false");
+        String dialect = "true".equalsIgnoreCase(fallback)
+                ? "org.hibernate.dialect.H2Dialect"
+                : environment.getProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.setProperty("hibernate.dialect", dialect);
         properties.setProperty("hibernate.show_sql", environment.getProperty("hibernate.show_sql", "false"));
         properties.setProperty("hibernate.jdbc.time_zone", "UTC");
         return properties;
+    }
+
+    private DataSource h2FallbackDataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.h2.Driver");
+        dataSource.setUrl("jdbc:h2:mem:ara;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE");
+        dataSource.setUsername("sa");
+        dataSource.setPassword("");
+        System.setProperty(FALLBACK_FLAG, "true");
+        return dataSource;
+    }
+
+    private String normalizeJdbcUrl(String url) {
+        if (url == null || url.isBlank()) {
+            return "";
+        }
+        String normalized = url.trim();
+        if (normalized.startsWith("mysql://")) {
+            return "jdbc:" + normalized;
+        }
+        return normalized;
     }
 }
