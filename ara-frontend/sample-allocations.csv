@@ -1,0 +1,11 @@
+yearGroup,section,day,time,subject,facultyName,allocationType
+II Year,A1,Monday,08:15 AM - 09:05 AM,DAA,Anitha Patil,LECTURE
+II Year,A1,Monday,09:05 AM - 09:55 AM,DAA,Anitha Patil,LECTURE
+II Year,A2,Tuesday,10:10 AM - 11:00 AM,CN,Pavan Kumar,LECTURE
+II Year,A3,Wednesday,11:00 AM - 11:50 AM,MO,Suhma Rani,LECTURE
+II Year,E1,Thursday,11:50 AM - 12:45 PM,FSAD,Anuradha,LAB
+III Year,C1,Monday,08:15 AM - 09:05 AM,Cloud Computing,Bhaskar Reddy,LECTURE
+III Year,C1,Monday,09:05 AM - 09:55 AM,Cloud Computing,Bhaskar Reddy,LECTURE
+III Year,C2,Thursday,10:10 AM - 11:00 AM,Advanced Networks,Narasimha,LAB
+I Year,B1,Friday,01:30 PM - 02:20 PM,Maths I,Lalitha,LECTURE
+I Year,B2,Friday,02:20 PM - 03:10 PM,Physics I,Jagannath Rao,LECTURE

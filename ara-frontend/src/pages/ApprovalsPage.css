@@ -1,0 +1,11 @@
+.approvals-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-lg);
+}
+
+@media (max-width: 900px) {
+  .approvals-layout {
+    grid-template-columns: 1fr;
+  }
+}

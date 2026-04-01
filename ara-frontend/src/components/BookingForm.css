@@ -1,0 +1,9 @@
+.booking-form {
+  max-width: 720px;
+}
+
+.booking-form__actions {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}

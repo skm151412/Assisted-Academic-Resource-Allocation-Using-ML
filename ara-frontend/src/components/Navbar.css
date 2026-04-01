@@ -1,0 +1,29 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  padding: 14px 24px;
+  background: var(--color-secondary);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.navbar__brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.navbar__user {
+  color: #e2e8f0;
+}

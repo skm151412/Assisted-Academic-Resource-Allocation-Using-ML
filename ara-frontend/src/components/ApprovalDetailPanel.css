@@ -1,0 +1,10 @@
+.approval-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.approval-detail__actions {
+  display: flex;
+  gap: var(--space-sm);
+}

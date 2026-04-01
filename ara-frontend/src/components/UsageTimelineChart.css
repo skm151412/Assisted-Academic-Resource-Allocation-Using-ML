@@ -1,0 +1,10 @@
+.timeline-list {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.timeline-item {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
