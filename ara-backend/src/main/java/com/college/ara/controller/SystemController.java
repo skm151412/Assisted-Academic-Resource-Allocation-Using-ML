@@ -9,7 +9,7 @@ import java.util.Map;
 @RestController
 public class SystemController {
 
-    @GetMapping("/")
+    @GetMapping("/api/system")
     public ResponseEntity<Map<String, String>> root() {
         return ResponseEntity.ok(Map.of(
                 "service", "ARA Backend",

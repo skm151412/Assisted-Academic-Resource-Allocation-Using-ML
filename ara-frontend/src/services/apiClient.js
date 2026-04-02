@@ -3,7 +3,12 @@ import axios from "axios";
 export const AUTH_STORAGE_KEY = "ara-auth";
 const LEGACY_AUTH_STORAGE_KEY = "ara-user";
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080/api";
+const isBrowser = typeof window !== "undefined";
+const isLocalhost =
+  isBrowser &&
+  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+const defaultApiBaseUrl = isLocalhost ? "http://localhost:8080/api" : "/api";
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || defaultApiBaseUrl;
 
 function readStorage(key) {
   if (typeof window === "undefined") {
