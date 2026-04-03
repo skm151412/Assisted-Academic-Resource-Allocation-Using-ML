@@ -1,11 +1,9 @@
 package com.college.ara.controller;
 
-import com.college.ara.model.Allocation;
-import com.college.ara.service.AllocationService;
-import com.college.ara.repository.ResourceRepository;
-import com.college.ara.model.Resource;
-import com.college.ara.model.User;
-import com.college.ara.service.UserService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
+import com.college.ara.config.RoomCatalog;
+import com.college.ara.model.Allocation;
+import com.college.ara.model.Resource;
+import com.college.ara.model.User;
+import com.college.ara.repository.ResourceRepository;
+import com.college.ara.service.AllocationService;
+import com.college.ara.service.UserService;
 
 @RestController
 @RequestMapping("/api/allocations")
 public class AllocationController {
-    private static final Set<String> ALLOWED_ROOM_CODES = Set.of(
-            "H1-01", "H1-02", "H1-03", "H1-04",
-            "H1-17", "H1-18", "H1-19", "H1-22", "H1-23", "H1-25", "H1-26");
 
     private final AllocationService allocationService;
     private final ResourceRepository resourceRepository;
@@ -75,7 +73,7 @@ public class AllocationController {
             List<Allocation> allocations = allocationService.getAllAllocations();
             List<Resource> managedResources = resourceRepository.findAll().stream()
                     .filter(Resource::isActive)
-                    .filter(resource -> ALLOWED_ROOM_CODES.contains(resource.getResourceCode()))
+                    .filter(resource -> RoomCatalog.MANAGED_ROOM_CODE_SET.contains(resource.getResourceCode()))
                     .toList();
 
             long totalAllocations = allocations.size();

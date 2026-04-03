@@ -1,10 +1,32 @@
 .approval-detail {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-md);
+}
+
+.approval-detail h3 {
+  margin: 0;
+}
+
+.approval-detail__row {
+  display: grid;
+  gap: 4px;
+}
+
+.approval-detail__label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.approval-detail__value {
+  color: #24364b;
 }
 
 .approval-detail__actions {
   display: flex;
   gap: var(--space-sm);
+  margin-top: 6px;
 }

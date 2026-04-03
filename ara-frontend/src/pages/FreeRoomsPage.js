@@ -48,7 +48,7 @@ export default function FreeRoomsPage() {
   };
 
   return (
-    <div className="page faculty-page">
+    <div className="page faculty-page faculty-page--free-rooms">
       <div className="faculty-page__header">
         <div>
           <h2>Free Rooms</h2>

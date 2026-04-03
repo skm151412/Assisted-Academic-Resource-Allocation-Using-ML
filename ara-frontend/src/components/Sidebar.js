@@ -5,6 +5,24 @@ import "./Sidebar.css";
 export default function Sidebar() {
   const { isAuthenticated, role } = useAuth();
 
+  const adminLinks = [
+    { to: "/dashboard", label: "Dashboard", icon: "DB" },
+    { to: "/resources", label: "Resources", icon: "RS" },
+    { to: "/booking", label: "Booking", icon: "BK" },
+    { to: "/approvals", label: "Approvals", icon: "AP" },
+    { to: "/auto-allocation", label: "Auto Allocation", icon: "AA" },
+  ];
+
+  const facultyLinks = [
+    { to: "/dashboard", label: "Dashboard", icon: "DB" },
+    { to: "/my-timetable", label: "My Timetable", icon: "TT" },
+    { to: "/request-booking", label: "Request Booking", icon: "RB" },
+    { to: "/my-requests", label: "My Requests", icon: "MR" },
+    { to: "/profile", label: "Profile", icon: "PR" },
+  ];
+
+  const links = role === "ADMIN" ? adminLinks : facultyLinks;
+
   if (!isAuthenticated) {
     return null;
   }
@@ -12,113 +30,19 @@ export default function Sidebar() {
   return (
     <nav className="sidebar">
       <ul className="sidebar__list">
-        <li>
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-            }
-          >
-            Dashboard
-          </NavLink>
-        </li>
-        {role === "ADMIN" ? (
-          <>
-            <li>
-              <NavLink
-                to="/resources"
-                className={({ isActive }) =>
-                  isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-                }
-              >
-                Resources
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/booking"
-                className={({ isActive }) =>
-                  isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-                }
-              >
-                Booking
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/approvals"
-                className={({ isActive }) =>
-                  isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-                }
-              >
-                Approvals
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/auto-allocation"
-                className={({ isActive }) =>
-                  isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-                }
-              >
-                Auto Allocation
-              </NavLink>
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <NavLink
-                to="/my-timetable"
-                className={({ isActive }) =>
-                  isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-                }
-              >
-                My Timetable
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/free-rooms"
-                className={({ isActive }) =>
-                  isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-                }
-              >
-                Free Rooms
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/request-booking"
-                className={({ isActive }) =>
-                  isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-                }
-              >
-                Request Booking
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/my-requests"
-                className={({ isActive }) =>
-                  isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-                }
-              >
-                My Requests
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/profile"
-                className={({ isActive }) =>
-                  isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-                }
-              >
-                Profile
-              </NavLink>
-            </li>
-          </>
-        )}
+        {links.map((link) => (
+          <li key={link.to}>
+            <NavLink
+              to={link.to}
+              className={({ isActive }) =>
+                isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
+              }
+            >
+              <span className="sidebar__icon" aria-hidden="true">{link.icon}</span>
+              <span>{link.label}</span>
+            </NavLink>
+          </li>
+        ))}
       </ul>
     </nav>
   );

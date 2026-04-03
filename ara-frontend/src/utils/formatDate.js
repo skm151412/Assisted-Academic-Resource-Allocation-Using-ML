@@ -1,0 +1,1 @@
+export const formatDateTime = (isoString) => { const date = new Date(isoString); return isNaN(date.getTime()) ? isoString : new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(date); };

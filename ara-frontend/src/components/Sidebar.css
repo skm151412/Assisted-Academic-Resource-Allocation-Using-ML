@@ -1,9 +1,17 @@
 .sidebar {
-  width: 220px;
-  background: var(--color-surface);
-  border-right: 1px solid var(--color-border);
-  padding: var(--space-lg) var(--space-md);
+  width: 240px;
+  flex: 0 0 240px;
+  background: var(--color-surface-glass);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 1px 0 10px rgba(0, 0, 0, 0.02);
+  padding: var(--space-xl) var(--space-lg);
   min-height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  position: sticky;
+  top: 64px;
 }
 
 .sidebar__list {
@@ -14,33 +22,100 @@
 
 .sidebar__link {
   display: flex;
-  align-items: center;
-  padding: 10px 12px;
+  align-items: center; /* Fix vertical alignment */
+  gap: var(--space-md);
+  padding: 12px 14px;
+  border-radius: var(--radius-md); /* Consistent border-radius */
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-size: var(--font-sm);
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.sidebar__icon {
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-sm);
-  color: var(--color-text);
-  transition: background var(--transition-base), color var(--transition-base);
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-sm); /* Adding depth */
+  transition: all var(--transition-base);
 }
 
 .sidebar__link:hover {
-  background: var(--color-surface-muted);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+  transform: translateX(4px);
+}
+
+.sidebar__link:hover .sidebar__icon {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
 }
 
 .sidebar__link--active {
-  background: rgba(31, 111, 235, 0.12);
-  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
   font-weight: 600;
+  box-shadow: inset 4px 0 0 var(--color-primary); /* Stronger active indicator */
+}
+
+.sidebar__link--active .sidebar__icon {
+  background: var(--color-primary);
+  border-color: var(--color-primary-strong);
+  color: #fff; /* Contrast up */
+  box-shadow: 0 4px 8px rgba(15, 118, 110, 0.3); /* Glowing icon for active */
+}
+
+/* Let's inject different colors into sidebar icons to make the navigation vibrant! */
+.sidebar__list li:nth-child(1) .sidebar__icon { color: var(--color-blue); background: var(--color-blue-soft); border-color: rgba(59, 130, 246, 0.3); }
+.sidebar__list li:nth-child(2) .sidebar__icon { color: var(--color-purple); background: var(--color-purple-soft); border-color: rgba(168, 85, 247, 0.3); }
+.sidebar__list li:nth-child(3) .sidebar__icon { color: var(--color-emerald); background: var(--color-emerald-soft); border-color: rgba(16, 185, 129, 0.3); }
+.sidebar__list li:nth-child(4) .sidebar__icon { color: var(--color-amber); background: var(--color-amber-soft); border-color: rgba(245, 158, 11, 0.3); }
+.sidebar__list li:nth-child(5) .sidebar__icon { color: var(--color-pink); background: var(--color-pink-soft); border-color: rgba(236, 72, 153, 0.3); }
+.sidebar__list li:nth-child(6) .sidebar__icon { color: var(--color-indigo); background: var(--color-indigo-soft); border-color: rgba(99, 102, 241, 0.3); }
+
+/* Override the inactive hover for customized icons */
+.sidebar__link:hover .sidebar__icon {
+  filter: brightness(0.95);
+}
+
+.sidebar__link--active .sidebar__icon {
+  color: #fff !important;
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary-strong) !important;
 }
 
 @media (max-width: 900px) {
   .sidebar {
     width: 100%;
+    flex: initial;
     min-height: auto;
+    max-height: none;
     border-right: none;
     border-bottom: 1px solid var(--color-border);
+    position: static;
+    top: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 12px;
   }
 
   .sidebar__list {
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    min-width: max-content;
+  }
+
+  .sidebar__link {
+    white-space: nowrap;
   }
 }

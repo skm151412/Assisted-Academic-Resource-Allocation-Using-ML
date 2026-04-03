@@ -1,3 +1,22 @@
 .approval-table tr[aria-selected="true"] {
-  background: rgba(20, 184, 166, 0.12);
+  background: var(--color-primary-soft);
+  border-left: 4px solid var(--color-primary);
+  box-shadow: inset 4px 0 0 var(--color-primary);
+}
+
+.approval-table tbody tr.clickable-row {
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  position: relative;
+}
+
+.approval-table tbody tr.clickable-row:hover {
+  background: var(--color-surface-hover, #f8fafc);
+  transform: translateX(4px);
+}
+
+.approval-table tbody tr.clickable-row:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+  background: var(--color-primary-soft);
 }

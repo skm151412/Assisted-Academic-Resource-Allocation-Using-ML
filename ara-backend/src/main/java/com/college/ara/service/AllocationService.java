@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.college.ara.config.RoomCatalog;
 import com.college.ara.model.Allocation;
 import com.college.ara.model.Resource;
 import com.college.ara.model.ResourceType;
@@ -37,8 +38,8 @@ public class AllocationService {
             "01:30 PM - 02:20 PM",
             "02:20 PM - 03:10 PM",
             "03:10 PM - 04:00 PM");
-    private static final List<String> LAB_ROOM_CODES = List.of("H1-01", "H1-02", "H1-03", "H1-04");
-    private static final List<String> CLASSROOM_ROOM_CODES = List.of("H1-17", "H1-18", "H1-19", "H1-22", "H1-23", "H1-25", "H2-28");
+    private static final List<String> LAB_ROOM_CODES = RoomCatalog.LAB_ROOM_CODES;
+    private static final List<String> CLASSROOM_ROOM_CODES = RoomCatalog.CLASSROOM_ROOM_CODES;
     private static final List<String> DEFAULT_SECOND_YEAR_SECTIONS = List.of("E1", "E2", "E3", "A1", "A2", "A3", "A4", "A5", "A6");
     private static final Set<String> DEFAULT_SECOND_YEAR_EXCLUDED_DAYS = Set.of("WEDNESDAY");
     private static final Set<String> NO_ROOM_ACTIVITY_SUBJECT_KEYS = Set.of("CRT", "GLOBAL CERTIFICATION", "GLOBAL LOGIC", "LIBRARY", "SPORTS");

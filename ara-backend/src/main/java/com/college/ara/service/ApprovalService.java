@@ -1,5 +1,11 @@
 package com.college.ara.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.college.ara.model.Approval;
 import com.college.ara.model.ApprovalDecision;
 import com.college.ara.model.Booking;
@@ -7,10 +13,6 @@ import com.college.ara.model.BookingStatus;
 import com.college.ara.model.User;
 import com.college.ara.repository.ApprovalRepository;
 import com.college.ara.repository.BookingRepository;
-import java.time.LocalDateTime;
-import java.util.List;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ApprovalService {
@@ -26,6 +28,9 @@ public class ApprovalService {
     @Transactional
     public Approval approve(Long bookingId, User approver, String remarks) {
         Booking booking = findBooking(bookingId);
+        if (booking.getStatus() != BookingStatus.PENDING) {
+            throw new IllegalArgumentException("Only pending bookings can be approved");
+        }
         booking.setStatus(BookingStatus.APPROVED);
         booking.setApprovedAt(LocalDateTime.now());
         bookingRepository.save(booking);
@@ -42,6 +47,9 @@ public class ApprovalService {
     @Transactional
     public Approval reject(Long bookingId, User approver, String remarks) {
         Booking booking = findBooking(bookingId);
+        if (booking.getStatus() != BookingStatus.PENDING) {
+            throw new IllegalArgumentException("Only pending bookings can be rejected");
+        }
         booking.setStatus(BookingStatus.REJECTED);
         bookingRepository.save(booking);
 

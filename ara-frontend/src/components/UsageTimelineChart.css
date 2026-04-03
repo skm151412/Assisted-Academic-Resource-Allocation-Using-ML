@@ -4,7 +4,8 @@
 }
 
 .timeline-item {
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-muted);
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid #d3dee8;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbfa 100%);
 }

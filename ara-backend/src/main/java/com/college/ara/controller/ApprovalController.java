@@ -1,12 +1,8 @@
 package com.college.ara.controller;
 
-import com.college.ara.model.Approval;
-import com.college.ara.model.Booking;
-import com.college.ara.model.User;
-import com.college.ara.service.ApprovalService;
-import com.college.ara.service.UserService;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.college.ara.model.Approval;
+import com.college.ara.model.Booking;
+import com.college.ara.model.User;
+import com.college.ara.model.UserRole;
+import com.college.ara.service.ApprovalService;
+import com.college.ara.service.UserService;
 
 @RestController
 @RequestMapping("/api/approvals")
@@ -45,6 +48,9 @@ public class ApprovalController {
                 return ResponseEntity.badRequest().body(error("Approver is required"));
             }
             User approver = userService.getUser(request.getApproverId());
+            if (approver.getRole() != UserRole.ADMIN) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error("Only admins can approve bookings"));
+            }
             Approval approval = approvalService.approve(bookingId, approver, request.getRemarks());
             return ResponseEntity.ok(approval);
         } catch (IllegalArgumentException ex) {
@@ -61,6 +67,9 @@ public class ApprovalController {
                 return ResponseEntity.badRequest().body(error("Approver is required"));
             }
             User approver = userService.getUser(request.getApproverId());
+            if (approver.getRole() != UserRole.ADMIN) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error("Only admins can reject bookings"));
+            }
             Approval approval = approvalService.reject(bookingId, approver, request.getRemarks());
             return ResponseEntity.ok(approval);
         } catch (IllegalArgumentException ex) {

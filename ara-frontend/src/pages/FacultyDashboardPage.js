@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import allocationApi from "../services/allocationApi";
 import bookingApi from "../services/bookingApi";
 import useAuth from "../hooks/useAuth";
@@ -60,7 +61,7 @@ export default function FacultyDashboardPage() {
   }, [stats]);
 
   return (
-    <div className="page faculty-page">
+    <div className="page faculty-page faculty-page--dashboard">
       <div className="faculty-page__header">
         <div>
           <h2>Faculty Dashboard</h2>
@@ -85,24 +86,48 @@ export default function FacultyDashboardPage() {
         </div>
       </div>
 
-      <div className="faculty-grid">
-        <div className="card faculty-card">
-          <h3>Notifications</h3>
-          <div className="faculty-notification-list">
-            {notifications.map((item) => (
-              <div className="faculty-notification-item" key={item}>{item}</div>
-            ))}
+      <div className="faculty-dashboard-layout">
+        <div className="faculty-dashboard-main">
+          <div className="card faculty-card">
+            <h3>Notifications</h3>
+            <div className="faculty-notification-list">
+              {notifications.map((item) => (
+                <div className="faculty-notification-item" key={item}>{item}</div>
+              ))}
+            </div>
+          </div>
+
+          <div className="card faculty-card">
+            <h3>Profile Snapshot</h3>
+            <div className="faculty-profile-summary">
+              <p><strong>Name:</strong> {user?.fullName || "Faculty"}</p>
+              <p><strong>Department:</strong> {user?.department || "Not set"}</p>
+              <p><strong>Subjects:</strong> {user?.subjectsHandled || "Not set"}</p>
+            </div>
           </div>
         </div>
 
-        <div className="card faculty-card">
-          <h3>Profile Snapshot</h3>
-          <div className="faculty-profile-summary">
-            <p><strong>Name:</strong> {user?.fullName || "Faculty"}</p>
-            <p><strong>Department:</strong> {user?.department || "Not set"}</p>
-            <p><strong>Subjects:</strong> {user?.subjectsHandled || "Not set"}</p>
+        <aside className="faculty-dashboard-side">
+          <h3>Today Overview</h3>
+          <div className="faculty-side-panel">
+            {stats.nextClass ? (
+              <>
+                <p><strong>Upcoming Class</strong></p>
+                <p>{stats.nextClass.subject}</p>
+                <p>{stats.nextClass.section} | {stats.nextClass.time}</p>
+              </>
+            ) : (
+              <p>No class scheduled for today.</p>
+            )}
           </div>
-        </div>
+
+          <h3>Quick Actions</h3>
+          <div className="faculty-side-actions">
+            <Link className="btn btn--primary" to="/request-booking">Request Room</Link>
+            <Link className="btn btn--ghost" to="/my-timetable">Open Timetable</Link>
+            <Link className="btn btn--ghost" to="/my-requests">Track Requests</Link>
+          </div>
+        </aside>
       </div>
     </div>
   );

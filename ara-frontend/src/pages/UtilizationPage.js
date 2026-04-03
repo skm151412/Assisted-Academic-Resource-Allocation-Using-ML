@@ -45,7 +45,7 @@ export default function UtilizationPage() {
   }, [usageLogs]);
 
   return (
-    <div className="page utilization-section">
+    <div className="page admin-page admin-page--utilization utilization-section">
       <h2>Utilization</h2>
       {error ? <p className="message message--error">{error}</p> : null}
       <div className="table-wrap">

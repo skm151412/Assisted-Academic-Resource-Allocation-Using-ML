@@ -3,3 +3,14 @@
   flex-direction: column;
   gap: var(--space-lg);
 }
+
+.utilization-section .table-wrap,
+.utilization-section .card {
+  border: 1px solid var(--border-glass-strong);
+  border-top-color: rgba(255, 255, 255, 1);
+  border-left-color: rgba(255, 255, 255, 1);
+  background: var(--color-surface-glass);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  box-shadow: var(--shadow-glass), var(--shadow-sm);
+}

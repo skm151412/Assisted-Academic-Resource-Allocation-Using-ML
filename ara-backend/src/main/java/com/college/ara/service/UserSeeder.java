@@ -10,6 +10,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.college.ara.config.RoomCatalog;
 import com.college.ara.model.Booking;
 import com.college.ara.model.BookingStatus;
 import com.college.ara.model.Resource;
@@ -22,11 +23,10 @@ import com.college.ara.repository.UserRepository;
 
 @Component
 public class UserSeeder implements ApplicationListener<ContextRefreshedEvent> {
-    private static final List<String> LAB_ROOM_CODES = List.of("H1-01", "H1-02", "H1-03", "H1-04");
-    private static final List<String> CLASSROOM_ROOM_CODES = List.of("H1-17", "H1-18", "H1-19", "H1-22", "H1-23", "H1-25", "H1-26");
-    private static final Set<String> ALLOWED_ROOM_CODES = Set.of(
-            "H1-01", "H1-02", "H1-03", "H1-04",
-            "H1-17", "H1-18", "H1-19", "H1-22", "H1-23", "H1-25", "H1-26");
+
+    private static final List<String> LAB_ROOM_CODES = RoomCatalog.LAB_ROOM_CODES;
+    private static final List<String> CLASSROOM_ROOM_CODES = RoomCatalog.CLASSROOM_ROOM_CODES;
+    private static final Set<String> ALLOWED_ROOM_CODES = RoomCatalog.MANAGED_ROOM_CODE_SET;
 
     private final UserRepository userRepository;
     private final ResourceRepository resourceRepository;

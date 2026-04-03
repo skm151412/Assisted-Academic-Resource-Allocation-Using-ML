@@ -98,7 +98,7 @@ export default function AnalyticsPage() {
   }, [filteredLogs]);
 
   return (
-    <div className="page analytics-summary">
+    <div className="page admin-page admin-page--analytics analytics-summary">
       <h2>Under-Utilization Analytics</h2>
       {error ? <p className="message message--error">{error}</p> : null}
       <div className="card">

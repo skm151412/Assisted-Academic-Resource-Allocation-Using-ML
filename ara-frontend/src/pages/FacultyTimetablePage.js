@@ -155,6 +155,15 @@ export default function FacultyTimetablePage() {
       .sort((left, right) => left.section.localeCompare(right.section));
   }, [allocations, selectedDay]);
 
+  const timetableSummary = useMemo(() => {
+    const classesToday = groupedDay.reduce((sum, group) => sum + group.blocks.length, 0);
+    return {
+      sections: groupedDay.length,
+      classesToday,
+      selectedDay,
+    };
+  }, [groupedDay, selectedDay]);
+
   const exportRows = useMemo(
     () =>
       DAY_TABS.flatMap((day) =>
@@ -186,7 +195,7 @@ export default function FacultyTimetablePage() {
   );
 
   return (
-    <div className="page faculty-page">
+    <div className="page faculty-page faculty-page--timetable">
       <div className="faculty-page__header">
         <div>
           <h2>My Timetable</h2>
@@ -221,35 +230,50 @@ export default function FacultyTimetablePage() {
         ))}
       </div>
 
-      <div className="faculty-card-list">
-        {groupedDay.length ? (
-          groupedDay.map((sectionGroup) => (
-            <div className="card faculty-card" key={`${selectedDay}-${sectionGroup.section}`}>
-              <div className="faculty-card__header">
-                <h3>{sectionGroup.section}</h3>
-                <span>{selectedDay}</span>
-              </div>
-              <div className="merged-slot-list">
-                {sectionGroup.blocks.map((block) => (
-                  <div className="merged-slot-card" key={block.key}>
-                    <div className="merged-slot-top">
-                      <span className="merged-slot-period">{block.periodLabel}</span>
-                      <span className="merged-slot-time">{block.timeLabel}</span>
+      <div className="timetable-layout">
+        <div className="faculty-card-list timetable-main">
+          {groupedDay.length ? (
+            groupedDay.map((sectionGroup) => (
+              <div className="card faculty-card" key={`${selectedDay}-${sectionGroup.section}`}>
+                <div className="faculty-card__header">
+                  <h3>{sectionGroup.section}</h3>
+                  <span>{selectedDay}</span>
+                </div>
+                <div className="merged-slot-list">
+                  {sectionGroup.blocks.map((block) => (
+                    <div className="merged-slot-card" key={block.key}>
+                      <div className="merged-slot-top">
+                        <span className="merged-slot-period">{block.periodLabel}</span>
+                        <span className="merged-slot-time">{block.timeLabel}</span>
+                      </div>
+                      <div className="merged-slot-title">{block.subject}</div>
+                      <div className="merged-slot-meta">{block.facultyName}</div>
+                      <div className="merged-slot-bottom">
+                        <span className="badge badge--primary">{block.typeLabel}</span>
+                        <span className="badge badge--success">{block.roomLabel}</span>
+                      </div>
                     </div>
-                    <div className="merged-slot-title">{block.subject}</div>
-                    <div className="merged-slot-meta">{block.facultyName}</div>
-                    <div className="merged-slot-bottom">
-                      <span className="badge badge--primary">{block.typeLabel}</span>
-                      <span className="badge badge--success">{block.roomLabel}</span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="message message--info">No classes found for {selectedDay}.</p>
-        )}
+            ))
+          ) : (
+            <p className="message message--info">No classes found for {selectedDay}.</p>
+          )}
+        </div>
+
+        <aside className="card timetable-side">
+          <h3>Day Summary</h3>
+          <div className="timetable-side__stats">
+            <p><strong>Day:</strong> {timetableSummary.selectedDay}</p>
+            <p><strong>Sections:</strong> {timetableSummary.sections}</p>
+            <p><strong>Merged Slots:</strong> {timetableSummary.classesToday}</p>
+          </div>
+          <div className="timetable-side__legend">
+            <span className="badge badge--primary">Lecture / Lab / Activity</span>
+            <span className="badge badge--success">Assigned Room</span>
+          </div>
+        </aside>
       </div>
     </div>
   );

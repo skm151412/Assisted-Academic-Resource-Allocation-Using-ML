@@ -1,70 +1,87 @@
 .allocation-page {
-  padding: 2rem;
+  /* removed padding, using global layout padding */
 }
 
 .header-actions {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
 }
 
 .header-actions h2 {
-  margin: 0 0 0.35rem;
-  font-size: 1.9rem;
-  color: var(--color-primary);
+  margin: 0 0 var(--space-xs);
+  font-size: var(--font-2xl);
+  color: var(--color-text);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .allocation-subtitle {
   margin: 0;
-  color: #5b6475;
+  color: var(--color-text-muted);
 }
 
 .allocation-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-sm);
+  align-items: center;
 }
 
 .allocation-builder-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
 }
 
 .allocation-panel,
 .allocation-results-card {
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  border: 1px solid #d9e3f1;
-  border-radius: 18px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-  padding: 1.2rem;
+  background: var(--color-surface-glass);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  border: 1px solid var(--border-glass-strong);
+  border-top-color: rgba(255, 255, 255, 1);
+  border-left-color: rgba(255, 255, 255, 1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glass), var(--shadow-sm);
+  padding: var(--space-xl);
 }
 
 .panel-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .panel-header h3 {
-  margin: 0 0 0.2rem;
-  color: #0f172a;
+  margin: 0 0 var(--space-xs);
+  color: var(--color-text);
+  font-size: var(--font-lg);
+  font-weight: 600;
 }
 
 .panel-header p {
   margin: 0;
-  color: #64748b;
+  color: var(--color-text-muted);
+  font-size: var(--font-sm);
 }
 
 .template-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.template-actions .btn {
+  border: 1px solid #c7ddd8;
+  background: #eef6f4;
 }
 
 .allocation-upload {
@@ -73,27 +90,45 @@
 
 .year-config-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
 }
 
 .year-config-card {
-  padding: 1rem;
-  border-radius: 14px;
-  border: 1px solid #dbe8ff;
-  background: #f8fbff;
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-hover);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.year-config-card .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }
 
 .allocation-textarea {
   width: 100%;
   min-height: 180px;
-  padding: 0.95rem;
-  border-radius: 12px;
-  border: 1px solid #cbd5e1;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-strong);
   resize: vertical;
   font: inherit;
-  background: #ffffff;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-inner);
+}
+
+.allocation-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
 }
 
 .table-scroll {
@@ -107,15 +142,15 @@
 
 .table th {
   padding: 0.75rem;
-  border: 1px solid #dbe8ff;
-  background: #eff6ff;
-  color: #1e40af;
+  border: 1px solid #d3dee8;
+  background: #edf5f3;
+  color: #2a4f56;
   text-align: left;
-  min-width: 140px;
+  min-width: 132px;
 }
 
 .table td {
-  border: 1px solid #dbe8ff;
+  border: 1px solid #d3dee8;
   padding: 0.55rem;
   vertical-align: top;
 }
@@ -160,7 +195,7 @@
 .message--info {
   background: #eef6ff;
   color: #334155;
-  border: 1px solid #bfd8ff;
+  border: 1px solid #c8ddd8;
 }
 
 @media (max-width: 900px) {

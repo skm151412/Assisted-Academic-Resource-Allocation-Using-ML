@@ -27,22 +27,22 @@ export default function ApprovalsPage() {
 
   usePolling(fetchBookings, 5000);
 
-  useEffect(() => {
-    if (!selectedBooking && bookings.length > 0) {
-      setSelectedBooking(bookings[0]);
-      return;
-    }
-
-    if (selectedBooking) {
-      const refreshedBooking = bookings.find((booking) => booking.id === selectedBooking.id) || null;
-      setSelectedBooking(refreshedBooking);
-    }
-  }, [bookings, selectedBooking]);
-
   const pendingBookings = useMemo(
     () => bookings.filter((booking) => booking.status === "PENDING"),
     [bookings]
   );
+
+  useEffect(() => {
+    if (!selectedBooking && pendingBookings.length > 0) {
+      setSelectedBooking(pendingBookings[0]);
+      return;
+    }
+
+    if (selectedBooking) {
+      const refreshedPendingBooking = pendingBookings.find((booking) => booking.id === selectedBooking.id) || null;
+      setSelectedBooking(refreshedPendingBooking);
+    }
+  }, [pendingBookings, selectedBooking]);
 
   const handleApprove = async (bookingId) => {
     if (!user?.id) {
@@ -83,25 +83,32 @@ export default function ApprovalsPage() {
   };
 
   return (
-    <div className="page">
-      <h2>Approvals</h2>
+    <div className="page admin-page admin-page--approvals approvals-page">
+      <div className="approvals-page__header">
+        <div>
+          <h2>Approvals</h2>
+          <p>Review pending room requests and make quick approval decisions.</p>
+        </div>
+      </div>
       {error ? <p className="message message--error">{error}</p> : null}
       {message ? <p className="message message--success">{message}</p> : null}
-      <div className="approvals-layout">
-        <div className="card">
+      <div className={`approvals-layout ${pendingBookings.length === 0 ? "approvals-layout--empty" : ""}`}>
+        <div className="card approvals-card">
           <ApprovalQueueTable
             bookings={pendingBookings}
             onSelect={setSelectedBooking}
             selectedId={selectedBooking?.id || null}
           />
         </div>
-        <div className="card">
-          <ApprovalDetailPanel
-            booking={selectedBooking}
-            onApprove={handleApprove}
-            onReject={handleReject}
-          />
-        </div>
+        {pendingBookings.length > 0 ? (
+          <div className="card approvals-card">
+            <ApprovalDetailPanel
+              booking={selectedBooking}
+              onApprove={handleApprove}
+              onReject={handleReject}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );

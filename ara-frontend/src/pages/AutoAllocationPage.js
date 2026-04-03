@@ -274,7 +274,7 @@ export default function AutoAllocationPage() {
   };
 
   return (
-    <div className="page allocation-page">
+    <div className="page admin-page admin-page--allocation allocation-page">
       <div className="header-actions">
         <div>
           <h2>Auto Allocation</h2>

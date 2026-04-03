@@ -1,5 +1,15 @@
 package com.college.ara.service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.college.ara.config.RoomCatalog;
 import com.college.ara.model.Allocation;
 import com.college.ara.model.Booking;
 import com.college.ara.model.BookingStatus;
@@ -8,20 +18,10 @@ import com.college.ara.model.ResourceType;
 import com.college.ara.repository.AllocationRepository;
 import com.college.ara.repository.BookingRepository;
 import com.college.ara.repository.ResourceRepository;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ResourceService {
-    private static final Set<String> ALLOWED_ROOM_CODES = Set.of(
-            "H1-01", "H1-02", "H1-03", "H1-04",
-            "H1-17", "H1-18", "H1-19", "H1-22", "H1-23", "H1-25", "H1-26");
+
     private static final DateTimeFormatter SLOT_TIME_FORMAT = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
 
     private final ResourceRepository resourceRepository;
@@ -57,7 +57,7 @@ public class ResourceService {
     public List<Resource> listManagedResources() {
         return resourceRepository.findAll().stream()
                 .filter(Resource::isActive)
-                .filter(resource -> ALLOWED_ROOM_CODES.contains(resource.getResourceCode()))
+                .filter(resource -> RoomCatalog.MANAGED_ROOM_CODE_SET.contains(resource.getResourceCode()))
                 .sorted((left, right) -> left.getResourceCode().compareToIgnoreCase(right.getResourceCode()))
                 .toList();
     }
@@ -95,8 +95,8 @@ public class ResourceService {
     }
 
     private boolean isFreeForAllocations(Resource resource, LocalDateTime startTime, LocalDateTime endTime) {
-        String dayLabel = startTime.getDayOfWeek().name().substring(0, 1) +
-                startTime.getDayOfWeek().name().substring(1).toLowerCase(Locale.ROOT);
+        String dayLabel = startTime.getDayOfWeek().name().substring(0, 1)
+                + startTime.getDayOfWeek().name().substring(1).toLowerCase(Locale.ROOT);
 
         for (Allocation allocation : allocationRepository.findAll()) {
             if (allocation.getRoom() == null || allocation.getRoom().getId() == null) {

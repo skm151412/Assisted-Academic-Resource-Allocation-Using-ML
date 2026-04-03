@@ -1,9 +1,16 @@
 .booking-form {
   max-width: 720px;
+  padding: 2px;
 }
 
 .booking-form__actions {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-md);
   align-items: center;
+  margin-top: 6px;
+}
+
+.booking-form__actions .message {
+  margin: 0;
 }

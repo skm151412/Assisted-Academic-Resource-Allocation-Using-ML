@@ -57,7 +57,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="page faculty-page">
+    <div className="page faculty-page faculty-page--profile">
       <div className="faculty-page__header">
         <div>
           <h2>Profile</h2>
@@ -68,51 +68,59 @@ export default function ProfilePage() {
       {error ? <p className="message message--error">{error}</p> : null}
       {message ? <p className="message message--info">{message}</p> : null}
 
-      <form className="card faculty-card form-grid" onSubmit={handleSubmit}>
-        <div className="form-row">
-          <label htmlFor="profileName">Full Name</label>
-          <input
-            id="profileName"
-            className="input"
-            value={form.fullName}
-            onChange={(event) => setForm((current) => ({ ...current, fullName: event.target.value }))}
-          />
-        </div>
-        <div className="form-row">
-          <label htmlFor="profileDepartment">Department</label>
-          <input
-            id="profileDepartment"
-            className="input"
-            value={form.department}
-            onChange={(event) => setForm((current) => ({ ...current, department: event.target.value }))}
-          />
-        </div>
-        <div className="form-row">
-          <label htmlFor="profileSubjects">Subjects Handled</label>
-          <input
-            id="profileSubjects"
-            className="input"
-            value={form.subjectsHandled}
-            onChange={(event) => setForm((current) => ({ ...current, subjectsHandled: event.target.value }))}
-          />
-        </div>
-        <div className="form-row">
-          <label htmlFor="profilePassword">New Password</label>
-          <input
-            id="profilePassword"
-            type="password"
-            className="input"
-            value={form.password}
-            onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
-            placeholder="Optional"
-          />
-        </div>
-        <div className="faculty-page__actions">
-          <button type="submit" className="btn btn--primary">
-            Save Profile
-          </button>
-        </div>
-      </form>
+      <div className="profile-layout">
+        <form className="card faculty-card form-grid profile-form" onSubmit={handleSubmit}>
+          <div className="form-row">
+            <label htmlFor="profileName">Full Name</label>
+            <input
+              id="profileName"
+              className="input"
+              value={form.fullName}
+              onChange={(event) => setForm((current) => ({ ...current, fullName: event.target.value }))}
+            />
+          </div>
+          <div className="form-row">
+            <label htmlFor="profileDepartment">Department</label>
+            <input
+              id="profileDepartment"
+              className="input"
+              value={form.department}
+              onChange={(event) => setForm((current) => ({ ...current, department: event.target.value }))}
+            />
+          </div>
+          <div className="form-row">
+            <label htmlFor="profileSubjects">Subjects Handled</label>
+            <input
+              id="profileSubjects"
+              className="input"
+              value={form.subjectsHandled}
+              onChange={(event) => setForm((current) => ({ ...current, subjectsHandled: event.target.value }))}
+            />
+          </div>
+          <div className="form-row">
+            <label htmlFor="profilePassword">New Password</label>
+            <input
+              id="profilePassword"
+              type="password"
+              className="input"
+              value={form.password}
+              onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
+              placeholder="Optional"
+            />
+          </div>
+          <div className="faculty-page__actions">
+            <button type="submit" className="btn btn--primary">
+              Save Profile
+            </button>
+          </div>
+        </form>
+
+        <aside className="card profile-side-card">
+          <h3>Account Notes</h3>
+          <p>Keep profile details updated so approvals and timetables map correctly.</p>
+          <p>Password update is optional and only needed when changing credentials.</p>
+        </aside>
+      </div>
     </div>
   );
 }

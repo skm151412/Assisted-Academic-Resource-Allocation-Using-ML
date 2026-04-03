@@ -1,0 +1,51 @@
+.resources-page {
+  gap: var(--space-lg);
+}
+
+.resources-page__form-card {
+  /* Let global .card style handle backgrounds */
+  background: var(--color-surface-glass);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  border: 1px solid var(--border-glass-strong);
+  border-top-color: rgba(255, 255, 255, 1);
+  border-left-color: rgba(255, 255, 255, 1);
+  box-shadow: var(--shadow-glass), var(--shadow-sm);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-md);
+}
+
+.resources-page__table-card {
+  /* For tables, less padding looks cleaner */
+  background: var(--color-surface-glass);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  border: 1px solid var(--border-glass-strong);
+  border-top-color: rgba(255, 255, 255, 1);
+  border-left-color: rgba(255, 255, 255, 1);
+  box-shadow: var(--shadow-glass), var(--shadow-sm);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  overflow-x: auto;
+}
+
+/* Make Status Column Pop */
+.resources-page__table-card td:nth-child(6) {
+  font-weight: 700;
+  color: var(--color-success-strong);
+}
+
+.resources-page__form-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  align-items: flex-end;
+  gap: var(--space-lg);
+}
+
+/* Fix "Add Resource" button too large */
+.resources-page__form-grid .btn {
+  width: auto;
+  min-width: 120px;
+  height: 48px; /* Match standard input heights roughly */
+  justify-self: start;
+}

@@ -60,36 +60,85 @@ export default function BookingPage() {
     return bookings.filter((booking) => booking.user?.id === user?.id);
   }, [bookings, role, user]);
 
+  const bookingSummary = useMemo(() => {
+    const pending = visibleBookings.filter((booking) => booking.status === "PENDING").length;
+    const approved = visibleBookings.filter((booking) => booking.status === "APPROVED").length;
+    const rejected = visibleBookings.filter((booking) => booking.status === "REJECTED").length;
+    return { pending, approved, rejected, total: visibleBookings.length };
+  }, [visibleBookings]);
+
   return (
-    <div className="page booking-page">
-      <h2>Booking</h2>
+    <div className="page admin-page admin-page--booking booking-page">
+      <h2>{role === "ADMIN" ? "Booking Monitor" : "Booking"}</h2>
       {error ? <p className="message message--error">{error}</p> : null}
       {success ? <p className="message message--success">{success}</p> : null}
-      <div className="card">
-        <BookingForm
-          resources={resources}
-          onSubmit={handleSubmit}
-          disabled={role !== "FACULTY"}
-        />
-      </div>
-      <div className="card">
-        <h3 style={{ marginTop: 0 }}>Recent Bookings</h3>
-        {visibleBookings.length === 0 ? (
-          <p className="message message--info">No bookings available right now.</p>
-        ) : (
-          <div className="bookings-list">
-            {visibleBookings.map((booking) => (
-              <div className="booking-item" key={booking.id}>
-                <strong>{booking.resource?.resourceName || booking.resource?.resourceCode || "Resource"}</strong>
-                <div>{booking.user?.fullName || booking.user?.username || "User"}</div>
-                <div>
-                  {booking.startTime} - {booking.endTime}
+
+      {role === "FACULTY" ? (
+        <div className="card booking-page__request-card">
+          <BookingForm
+            resources={resources}
+            onSubmit={handleSubmit}
+            disabled={false}
+          />
+        </div>
+      ) : (
+        <div className="booking-page__monitor-note">
+          <h3>Monitoring Mode Active</h3>
+          <p>
+            Admin users cannot create booking requests from this page. Use <strong>Approvals</strong> to review pending requests.
+          </p>
+        </div>
+      )}
+
+      <div className="booking-layout">
+        <div className="card booking-main-card">
+          <h3 className="booking-page__list-title">{role === "ADMIN" ? "All Booking Requests" : "My Recent Requests"}</h3>
+          {visibleBookings.length === 0 ? (
+            <p className="message message--info">
+              {role === "ADMIN" ? "No booking requests available right now." : "No booking requests found yet."}
+            </p>
+          ) : (
+            <div className="bookings-list">
+              {visibleBookings.map((booking) => (
+                  <div
+                    className={`booking-item ${
+                      booking.status === "APPROVED"
+                        ? "booking-item--approved"
+                        : booking.status === "REJECTED"
+                        ? "booking-item--rejected"
+                        : "booking-item--pending"
+                    }`}
+                    key={booking.id}
+                  >
+                  <strong className="booking-item__resource">{booking.resource?.resourceName || booking.resource?.resourceCode || "Resource"}</strong>
+                  <div className="booking-item__requester">{booking.user?.fullName || booking.user?.username || "User"}</div>
+                  <div className="booking-item__time">
+                    {booking.startTime} - {booking.endTime}
+                  </div>
+                  <div className={
+                    booking.status === "APPROVED"
+                      ? "badge badge--success"
+                      : booking.status === "REJECTED"
+                      ? "badge badge--danger"
+                      : "badge badge--warning"
+                  }>
+                    {booking.status}
+                  </div>
                 </div>
-                <div className="badge badge--primary">{booking.status}</div>
-              </div>
-            ))}
+              ))}
+            </div>
+          )}
+        </div>
+
+        <aside className="card booking-side-card">
+          <h3>Summary</h3>
+          <div className="booking-side-list">
+            <p><strong>Total:</strong> {bookingSummary.total}</p>
+            <p><strong>Pending:</strong> {bookingSummary.pending}</p>
+            <p><strong>Approved:</strong> {bookingSummary.approved}</p>
+            <p><strong>Rejected:</strong> {bookingSummary.rejected}</p>
           </div>
-        )}
+        </aside>
       </div>
     </div>
   );
